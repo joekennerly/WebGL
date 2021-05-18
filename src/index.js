@@ -1,9 +1,49 @@
-function component() {
-  const element = document.createElement('div');
+let scene, camera, renderer, cube
 
-  element.innerHTML = 'Hello webpack';
+function init() {
+  scene = new THREE.Scene()
 
-  return element;
+  camera = new THREE.PerspectiveCamera(
+    75,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    1000
+  )
+
+  renderer = new THREE.WebGLRenderer({ antialias: true })
+
+  renderer.setSize(window.innerWidth, window.innerHeight)
+
+  document.body.appendChild(renderer.domElement)
+
+  const geometry = new THREE.BoxGeometry()
+
+
+  // const texture = new THREE.TextureLoader().load('path-to-image-file')
+  // const material = new THREE.MeshBasicMaterial({ map: texture })
+  const material = new THREE.MeshBasicMaterial({ color: 0x0000ff })
+  cube = new THREE.Mesh(geometry, material)
+  scene.add(cube)
+
+  camera.position.z = 5
 }
 
-document.body.appendChild(component());
+function animate() {
+  requestAnimationFrame(animate)
+
+  cube.rotation.x += 0.002
+  cube.rotation.y += 0.01
+
+  renderer.render(scene, camera)
+}
+
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight
+  camera.updateProjectionMatrix()
+  renderer.setSize(window.innerWidth, window.innerHeight)
+}
+
+window.addEventListener('resize', onWindowResize, false)
+
+init()
+animate()
